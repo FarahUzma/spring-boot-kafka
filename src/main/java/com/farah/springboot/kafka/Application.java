@@ -1,4 +1,4 @@
-package com.example.springboot;
+package initial.src.main.java.springboot.kafka;
 
 import java.util.Arrays;
 

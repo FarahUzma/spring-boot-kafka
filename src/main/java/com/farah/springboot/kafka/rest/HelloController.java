@@ -1,4 +1,4 @@
-package com.example.springboot;
+package com.farah.springboot.kafka;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
