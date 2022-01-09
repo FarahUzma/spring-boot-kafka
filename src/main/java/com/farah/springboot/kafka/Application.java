@@ -1,24 +1,37 @@
-package initial.src.main.java.springboot.kafka;
+package com.farah.springboot.kafka;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @SpringBootApplication
-public class Application {
+public class Application implements ApplicationRunner {
 
-	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(Application.class, args);
+	// dervied from KafkaProducerConfig
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
 
-		System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-		String[] beanNames = ctx.getBeanDefinitionNames();
-		Arrays.sort(beanNames);
-		for (String beanName : beanNames) {
-			System.out.println(beanName);
-		}
+	public void sendMessage(String msg) {
+		kafkaTemplate.send("first_topic", msg);
 	}
-	
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+	//derived from KafkaConsumerConfig
+	@KafkaListener(topics = "first_topic", groupId = "my-third-app")
+	public void listen(String message) {
+		System.out.println("Received Messasge in group - my-third-app: " + message);
+	}
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		sendMessage("Hi Farah");
+	}
+
 }
